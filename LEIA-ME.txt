@@ -1,0 +1,29 @@
+Arquivos auxiliares (frontend):
+- especialidades.json — lista completa de especialidades.
+- snippets.js — funções de UI/fluxo (lista clicável, delays humanos, guarda de recepção, base legal).
+
+Passos básicos:
+1) Suba estes arquivos na raiz do seu frontend no Netlify (junto dos HTMLs).
+2) Em receptionist.html:
+   <script type="module">
+     import { renderEspecialidades, setFromReception, baseLegalTele } from './snippets.js';
+     // carregar JSON e renderizar
+     fetch('./especialidades.json').then(r => r.json()).then(data => {
+       const box = document.getElementById('lista-especialidades');
+       renderEspecialidades(box, data, (esp) => {
+         // fale algo, depois:
+         setFromReception();
+         location.href = '/paciente.html?especialidade='+encodeURIComponent(esp.nome);
+       });
+     });
+     // exibir base legal:
+     document.getElementById('base-legal').innerHTML = baseLegalTele;
+   </script>
+
+3) Em paciente.html e medico.html (logo no início):
+   <script type="module">
+     import { guardReception, humanDelays } from './snippets.js';
+     guardReception('/receptionist.html');
+     // Exemplo de uso dos delays
+     const {thinkMs, typeMs} = humanDelays(120,'medico');
+   </script>

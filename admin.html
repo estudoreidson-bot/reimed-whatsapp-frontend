@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Médico – Queimadas Telemedicina</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .container{max-width:1100px;margin:20px auto;padding:16px;background:#fff;border:1px solid #e5e7eb;border-radius:12px}
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+    .row > *{flex:1}
+    label{display:block;font-weight:600;margin-bottom:6px}
+    input,select,textarea{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px}
+    button{padding:10px 16px;border:1px solid #0f172a;background:#0f172a;color:#fff;border-radius:8px;cursor:pointer}
+    button.secondary{background:#fff;color:#0f172a}
+    .hidden{display:none}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{border:1px solid #e5e7eb;padding:8px;text-align:left;vertical-align:top}
+    th{background:#f1f5f9}
+    .status{font-weight:700}
+    .pill{display:inline-block;padding:2px 8px;border-radius:16px;border:1px solid #cbd5e1}
+    .pill.pendente{background:#fef3c7}
+    .pill.aprovado{background:#dcfce7}
+    .pill.rejeitado{background:#fee2e2}
+    header img.qbanner{height:48px;width:auto}
+    header{display:flex;gap:12px;align-items:center;padding:12px 0}
+    .totals{display:flex;gap:12px;margin-top:12px}
+    .card{flex:1;border:1px solid #e5e7eb;border-radius:12px;padding:12px;background:#fafafa}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center}
+    .modal .box{background:#fff;border-radius:12px;max-width:700px;width:95%;padding:16px}
+    .right{float:right}
+    .login{max-width:380px;margin:80px auto}
+    .muted{color:#64748b;font-size:14px}
+  </style>
+</head>
+<body>
+  <div class="container" id="app">
+    <header>
+      <img class="qbanner" src="prefeitura-queimadas.jpg" alt="Prefeitura de Queimadas">
+      <div>
+        <h1>Área do Médico Administrador</h1>
+        <div class="muted">Valide receitas, relatórios, encaminhamentos e visualize atendimentos</div>
+      </div>
+      <div class="right">
+        <button id="logoutBtn" class="secondary hidden">Sair</button>
+      </div>
+    </header>
+
+    <section id="login" class="login">
+      <h2>Acesso restrito</h2>
+      <label>CPF</label>
+      <input id="cpf" inputmode="numeric" maxlength="14" placeholder="Seu CPF">
+      <label>Senha</label>
+      <input id="pwd" type="password" placeholder="Sua senha">
+      <div style="margin-top:12px">
+        <button id="loginBtn">Entrar</button>
+      </div>
+      <div id="loginMsg" class="muted" style="margin-top:8px"></div>
+    </section>
+
+    <section id="dash" class="hidden">
+      <div class="row">
+        <div>
+          <label>Período inicial</label><input type="date" id="start">
+        </div>
+        <div>
+          <label>Período final</label><input type="date" id="end">
+        </div>
+        <div>
+          <button id="filtrar">Buscar</button>
+        </div>
+        <div>
+          <button id="imprimir">Imprimir PDFs do período</button>
+        </div>
+      </div>
+
+      <div class="totals">
+        <div class="card"><div>Total</div><div id="t_total" class="status">0</div></div>
+        <div class="card"><div>Pendentes</div><div id="t_pendentes" class="status">0</div></div>
+        <div class="card"><div>Aprovados</div><div id="t_aprovados" class="status">0</div></div>
+        <div class="card"><div>Rejeitados</div><div id="t_rejeitados" class="status">0</div></div>
+      </div>
+
+      <table id="tbl">
+        <thead>
+          <tr><th>ID</th><th>Paciente</th><th>CPF</th><th>Tipo</th><th>Status</th><th>Data</th><th>Ações</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </div>
+
+  <div id="modal" class="modal"><div class="box">
+    <h3 id="m_title">Documento</h3>
+    <textarea id="m_text" rows="16"></textarea>
+    <div class="row">
+      <button id="m_cancel" class="secondary">Cancelar</button>
+      <div style="flex:1"></div>
+      <button id="m_reject" class="secondary">Rejeitar</button>
+      <button id="m_approve">Aprovar</button>
+    </div>
+  </div></div>
+
+<script>
+const API = "https://remedy-queimadas-api.onrender.com";
+let token = localStorage.getItem("adm_token") || null;
+
+const els = {
+  login: document.getElementById('login'),
+  dash: document.getElementById('dash'),
+  cpf: document.getElementById('cpf'),
+  pwd: document.getElementById('pwd'),
+  loginBtn: document.getElementById('loginBtn'),
+  loginMsg: document.getElementById('loginMsg'),
+  logoutBtn: document.getElementById('logoutBtn'),
+  start: document.getElementById('start'),
+  end: document.getElementById('end'),
+  filtrar: document.getElementById('filtrar'),
+  imprimir: document.getElementById('imprimir'),
+  t_total: document.getElementById('t_total'),
+  t_pendentes: document.getElementById('t_pendentes'),
+  t_aprovados: document.getElementById('t_aprovados'),
+  t_rejeitados: document.getElementById('t_rejeitados'),
+  tbl: document.getElementById('tbl').querySelector('tbody'),
+  modal: document.getElementById('modal'),
+  m_title: document.getElementById('m_title'),
+  m_text: document.getElementById('m_text'),
+  m_cancel: document.getElementById('m_cancel'),
+  m_reject: document.getElementById('m_reject'),
+  m_approve: document.getElementById('m_approve'),
+};
+
+function show(el){ el.classList.remove('hidden'); }
+function hide(el){ el.classList.add('hidden'); }
+function authHeaders(){ return token ? { "Authorization":"Bearer "+token, "Content-Type":"application/json" } : {"Content-Type":"application/json"}; }
+
+function setLogged(p){ 
+  if(p){ show(els.dash); hide(els.login); show(els.logoutBtn); } 
+  else { hide(els.dash); show(els.login); hide(els.logoutBtn); token=null; localStorage.removeItem('adm_token'); }
+}
+
+async function api(path, opt={}){
+  const res = await fetch(API + path, { ...opt, headers: { ...(opt.headers||{}), ...authHeaders() } });
+  if(!res.ok){ const t = await res.text(); throw new Error(t || res.statusText); }
+  return await res.json();
+}
+
+els.loginBtn.onclick = async ()=>{
+  try{
+    const { ok, token: tk } = await api("/auth/login", { method:"POST", body: JSON.stringify({ cpf: els.cpf.value, password: els.pwd.value }) });
+    if(ok){ token=tk; localStorage.setItem("adm_token", tk); setLogged(true); await loadSummary(); await loadDocs(); }
+  }catch(e){ els.loginMsg.textContent = "Falha no login"; }
+};
+
+els.logoutBtn.onclick = ()=> setLogged(false);
+
+async function loadSummary(){
+  const qs = buildRangeQS();
+  const data = await api("/admin/summary"+qs);
+  els.t_total.textContent = data.total;
+  els.t_pendentes.textContent = data.pendentes;
+  els.t_aprovados.textContent = data.aprovados;
+  els.t_rejeitados.textContent = data.rejeitados;
+}
+
+function buildRangeQS(){
+  const p=[]; if(els.start.value) p.push("start="+els.start.value); if(els.end.value) p.push("end="+els.end.value);
+  return p.length ? ("?"+p.join("&")) : "";
+}
+
+async function loadDocs(){
+  const qs = buildRangeQS();
+  const data = await api("/admin/docs"+qs);
+  const tbody = els.tbl; tbody.innerHTML = "";
+  for(const d of (data.items||[])){
+    const tr = document.createElement('tr');
+    tr.innerHTML = "<td>"+d.id+"</td><td>"+(d.pacienteNome||"-")+"</td><td>"+(d.pacienteCPF||"-")+"</td><td>"+d.tipo+"</td>"+
+                   "<td><span class='pill "+d.status+"'>"+d.status+"</span></td><td>"+new Date(d.createdAt).toLocaleString()+"</td>"+
+                   "<td class='actions'></td>";
+    const actions = tr.querySelector('.actions');
+    const btnVer = document.createElement('button'); btnVer.textContent="Ver/Editar"; btnVer.onclick = ()=> openModal(d);
+    actions.appendChild(btnVer);
+    if(d.status!=="aprovado"){
+      const btnApr = document.createElement('button'); btnApr.textContent="Aprovar"; btnApr.onclick = ()=> approveDoc(d);
+      actions.appendChild(btnApr);
+      const btnRej = document.createElement('button'); btnRej.textContent="Rejeitar"; btnRej.onclick = ()=> rejectDoc(d);
+      actions.appendChild(btnRej);
+    }
+    const btnImp = document.createElement('button'); btnImp.textContent="Imprimir"; btnImp.onclick = ()=> printDoc(d);
+    actions.appendChild(btnImp);
+    tbody.appendChild(tr);
+  }
+}
+
+function openModal(doc){
+  els.m_title.textContent = "Documento #"+doc.id+" — "+doc.tipo;
+  els.m_text.value = doc.conteudo||"";
+  els.modal.style.display = "flex";
+  els.m_cancel.onclick = ()=> els.modal.style.display = "none";
+  els.m_approve.onclick = async ()=>{ await approveDoc(doc, els.m_text.value); els.modal.style.display="none"; };
+  els.m_reject.onclick = async ()=>{ await rejectDoc(doc); els.modal.style.display="none"; };
+}
+
+async function approveDoc(doc, editedText=null){
+  await api("/admin/docs/"+doc.id+"/approve", { method:"POST", body: JSON.stringify({ conteudo: editedText }) });
+  await loadSummary(); await loadDocs();
+}
+async function rejectDoc(doc){
+  await api("/admin/docs/"+doc.id+"/reject", { method:"POST" });
+  await loadSummary(); await loadDocs();
+}
+
+function printDoc(doc){
+  const w = window.open("", "_blank");
+  w.document.write("<pre style='white-space:pre-wrap;font:16px/1.4 system-ui,Segoe UI,Arial'>"+(doc.conteudo||"")+"</pre>");
+  w.document.close(); w.focus(); w.print();
+}
+
+els.filtrar.onclick = async ()=>{ await loadSummary(); await loadDocs(); };
+els.imprimir.onclick = async ()=>{
+  const qs = buildRangeQS();
+  const data = await api("/admin/docs"+qs);
+  const w = window.open("", "_blank");
+  let html = "<h1>Receitas e Documentos do período</h1>";
+  for(const d of (data.items||[])){
+    html += "<hr><h3>#"+d.id+" — "+d.tipo+" — "+(d.pacienteNome||"-")+"</h3><pre style='white-space:pre-wrap'>"+(d.conteudo||"")+"</pre>";
+  }
+  w.document.write("<html><body>"+html+"</body></html>");
+  w.document.close(); w.focus(); w.print();
+};
+
+// Estado inicial
+if(token){ setLogged(true); loadSummary().then(loadDocs).catch(()=>setLogged(false)); }
+</script>
+</body>
+</html>

@@ -1,2 +1,10 @@
 [build]
-  publish = "."
+publish = "/"
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/"
+  to = "/receptionist.html"
+  status = 301
+  force = true

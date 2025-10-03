@@ -1,0 +1,250 @@
+[
+  {
+    "nome": "Clínico Geral",
+    "descricao": "atendimento geral"
+  },
+  {
+    "nome": "Medicina de Família e Comunidade",
+    "descricao": "cuidado integral / doenças comuns"
+  },
+  {
+    "nome": "Pediatra",
+    "descricao": "crianças"
+  },
+  {
+    "nome": "Neonatologista",
+    "descricao": "recém-nascidos"
+  },
+  {
+    "nome": "Geriatra",
+    "descricao": "idosos"
+  },
+  {
+    "nome": "Ginecologista/Obstetra",
+    "descricao": "saúde feminina / gravidez"
+  },
+  {
+    "nome": "Urologista",
+    "descricao": "sistema urinário / próstata"
+  },
+  {
+    "nome": "Cardiologista",
+    "descricao": "coração"
+  },
+  {
+    "nome": "Cardiopediatra",
+    "descricao": "coração infantil"
+  },
+  {
+    "nome": "Endocrinologista",
+    "descricao": "hormônios / tireoide / diabetes"
+  },
+  {
+    "nome": "Endocrinopediatra",
+    "descricao": "hormônios infantis"
+  },
+  {
+    "nome": "Ortopedista",
+    "descricao": "ossos / articulações / coluna"
+  },
+  {
+    "nome": "Reumatologista",
+    "descricao": "doenças autoimunes / articulações"
+  },
+  {
+    "nome": "Reumatopediatra",
+    "descricao": "autoimunes em crianças"
+  },
+  {
+    "nome": "Dermatologista",
+    "descricao": "pele / cabelo / unhas"
+  },
+  {
+    "nome": "Psiquiatra",
+    "descricao": "saúde mental"
+  },
+  {
+    "nome": "Psicólogo",
+    "descricao": "apoio emocional"
+  },
+  {
+    "nome": "Neurologista",
+    "descricao": "cérebro / nervos"
+  },
+  {
+    "nome": "Neuropediatra",
+    "descricao": "neurologia infantil"
+  },
+  {
+    "nome": "Otorrinolaringologista (Otorrino)",
+    "descricao": "ouvido / nariz / garganta"
+  },
+  {
+    "nome": "Otorrino Pediátrico",
+    "descricao": "ouvido / nariz / garganta em crianças"
+  },
+  {
+    "nome": "Oftalmologista",
+    "descricao": "olhos / visão"
+  },
+  {
+    "nome": "Mastologista",
+    "descricao": "mamas"
+  },
+  {
+    "nome": "Proctologista (Coloproctologia)",
+    "descricao": "reto / ânus / hemorroidas"
+  },
+  {
+    "nome": "Gastroenterologista",
+    "descricao": "estômago / intestinos"
+  },
+  {
+    "nome": "Hepatologista",
+    "descricao": "fígado"
+  },
+  {
+    "nome": "Nefrologista",
+    "descricao": "rins"
+  },
+  {
+    "nome": "Nefropediatra",
+    "descricao": "rins em crianças"
+  },
+  {
+    "nome": "Pneumologista",
+    "descricao": "pulmões / respiração"
+  },
+  {
+    "nome": "Pneumopediatra",
+    "descricao": "pulmões infantis"
+  },
+  {
+    "nome": "Hematologista",
+    "descricao": "sangue"
+  },
+  {
+    "nome": "Infectologista",
+    "descricao": "infecções / doenças transmissíveis"
+  },
+  {
+    "nome": "Infectopediatra",
+    "descricao": "infecções em crianças"
+  },
+  {
+    "nome": "Alergologista/Imunologista",
+    "descricao": "alergias / imunidade"
+  },
+  {
+    "nome": "Angiologista",
+    "descricao": "veias / circulação"
+  },
+  {
+    "nome": "Otoneurologista",
+    "descricao": "tonturas / equilíbrio"
+  },
+  {
+    "nome": "Oncologista",
+    "descricao": "câncer"
+  },
+  {
+    "nome": "Medicina Nuclear",
+    "descricao": "diagnósticos por radiofármacos"
+  },
+  {
+    "nome": "Patologista",
+    "descricao": "biópsias / anatomia patológica"
+  },
+  {
+    "nome": "Genetista Médico",
+    "descricao": "genética / doenças raras"
+  },
+  {
+    "nome": "Medicina do Trabalho",
+    "descricao": "saúde ocupacional / atestados"
+  },
+  {
+    "nome": "Medicina Esportiva",
+    "descricao": "performance / lesões esportivas"
+  },
+  {
+    "nome": "Medicina da Dor",
+    "descricao": "dor crônica"
+  },
+  {
+    "nome": "Medicina Paliativa",
+    "descricao": "cuidado ao fim de vida"
+  },
+  {
+    "nome": "Nutrólogo",
+    "descricao": "alimentação / nutrientes"
+  },
+  {
+    "nome": "Nutricionista",
+    "descricao": "dieta / planejamento alimentar"
+  },
+  {
+    "nome": "Fonoaudiólogo",
+    "descricao": "fala / deglutição / audição"
+  },
+  {
+    "nome": "Fisioterapeuta",
+    "descricao": "reabilitação física"
+  },
+  {
+    "nome": "Fisiatra",
+    "descricao": "reabilitação médica"
+  },
+  {
+    "nome": "Otorrino Foniatria",
+    "descricao": "voz / fala"
+  },
+  {
+    "nome": "Ortopedia Pediátrica",
+    "descricao": "ortopedia infantil"
+  },
+  {
+    "nome": "Reabilitação Vestibular",
+    "descricao": "tonturas / equilíbrio"
+  },
+  {
+    "nome": "Dermatopediatra",
+    "descricao": "pele infantil"
+  },
+  {
+    "nome": "Endodontista/Odontologia",
+    "descricao": "dentes / canal"
+  },
+  {
+    "nome": "Ortopedia Coluna",
+    "descricao": "coluna vertebral"
+  },
+  {
+    "nome": "Hepatopancreatobiliar (HPB)",
+    "descricao": "fígado / pâncreas / vias biliares"
+  },
+  {
+    "nome": "Obstetrícia Fetal/Medicina Fetal",
+    "descricao": "gestação / feto"
+  },
+  {
+    "nome": "Fertilidade/Reprodução Assistida",
+    "descricao": "infertilidade"
+  },
+  {
+    "nome": "Otologia",
+    "descricao": "ouvido"
+  },
+  {
+    "nome": "Rinologia",
+    "descricao": "nariz / seios da face"
+  },
+  {
+    "nome": "Laringologia",
+    "descricao": "laringe / voz"
+  },
+  {
+    "nome": "Ortomolecular",
+    "descricao": "equilíbrio bioquímico (manipulados)"
+  }
+]

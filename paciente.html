@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Conectando ao médico…</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <img class="qbanner" src="prefeitura-queimadas.jpg" alt="Prefeitura de Queimadas">
+  <h1>Queimadas Telemedicina</h1>
+</header>
+<main>
+<div class="chat"><div class="msg recep">Preparando sua sala com o médico…</div></div>
+<footer class="atende"><img src="atende-mais.png" alt="Atende+"></footer>
+</main>
+<script>
+const API_BASE = (localStorage.getItem('API_BASE')||'https://remedy-queimadas-api.onrender.com');
+(function start(){
+  // Proteção de fluxo: sem triagem -> volta para recepção
+  if(!localStorage.getItem('triageComplete') || !localStorage.getItem('selectedSpecialty')){
+    location.replace('receptionist.html'); return;
+  }
+  const specialty = localStorage.getItem('selectedSpecialty');
+  fetch(API_BASE+'/api/session',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({specialty})
+  }).then(r=>r.json()).then(d=>{
+    localStorage.setItem('sessionId', d.sessionId||'');
+    location.replace('medico.html?especialidade=' + encodeURIComponent(specialty));
+  }).catch(()=>{
+    // mesmo que a API caia, segue para a sala (o médico vai avisar erro)
+    location.replace('medico.html?especialidade=' + encodeURIComponent(specialty));
+  });
+})();
+</script>
+</body>
+</html>
